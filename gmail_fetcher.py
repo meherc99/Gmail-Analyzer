@@ -3,6 +3,7 @@ Gmail Email Fetcher
 This script uses the Gmail API to fetch all emails from your Gmail account.
 """
 
+from multiprocessing.pool import Pool
 import os.path
 import pickle
 from google.auth.transport.requests import Request
@@ -147,13 +148,22 @@ def fetch_all_emails(max_emails=None):
     print(f"\nFetching details for {len(messages)} messages...")
     all_emails = []
     
-    for i, msg in enumerate(messages, 1):
-        if i % 100 == 0:
-            print(f"Processing message {i}/{len(messages)}...")
+    
+    # for i, msg in enumerate(messages, 1):
+    #     if i % 100 == 0:
+    #         print(f"Processing message {i}/{len(messages)}...")
         
-        details = get_message_details(service, 'me', msg['id'])
-        if details:
-            all_emails.append(details)
+    #     details = get_message_details(service, 'me', msg['id'])
+    #     if details:
+    #         all_emails.append(details)
+    
+    with Pool(processes=5) as pool:
+        all_emails = pool.starmap(
+            get_message_details,
+            [(service, 'me', msg['id']) for msg in messages]
+        )
+        # Filter out None results
+        all_emails = [email for email in all_emails if email is not None]
     
     print(f"\nSuccessfully fetched {len(all_emails)} emails!")
     return all_emails
