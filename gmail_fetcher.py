@@ -161,7 +161,7 @@ def fetch_all_emails(max_emails=None):
 
 if __name__ == '__main__':
     # Fetch all emails (or specify a limit, e.g., max_emails=100)
-    emails = fetch_all_emails(max_emails=100)  # Change to None to fetch all
+    emails = fetch_all_emails(max_emails=None)  # Change to None to fetch all
     
     # Display sample results
     if emails:
