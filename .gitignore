@@ -5,6 +5,8 @@ token.pickle
 # Email data
 emails.json
 
+*.json
+
 # Python
 __pycache__/
 *.py[cod]
